@@ -67,7 +67,7 @@
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 90;
+      z-index: 100;
       padding: 1rem 3rem;
       display: flex;
       justify-content: space-between;
@@ -813,7 +813,7 @@
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(10, 10, 15, 0.98);
-      z-index: 80;
+      z-index: 200;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -1059,12 +1059,12 @@
         <span class="stat-label">billed in placements</span>
       </div>
       <div class="stat">
-        <span class="stat-value">Web3</span>
-        <span class="stat-label">exclusive focus</span>
+        <span class="stat-value">70+</span>
+        <span class="stat-label">placements</span>
       </div>
       <div class="stat">
-        <span class="stat-value">IC → CTO</span>
-        <span class="stat-label">full seniority range</span>
+        <span class="stat-value">50+</span>
+        <span class="stat-label">clients worked with</span>
       </div>
     </div>
 
@@ -1252,6 +1252,7 @@
 
     function openMobileMenu() {
       document.getElementById('mobileMenu').classList.add('open');
+      document.querySelector('nav').classList.remove('nav-hidden');
       document.body.style.overflow = 'hidden';
     }
 
