@@ -1167,18 +1167,18 @@
       </a>
     </div>
 
-    <div class="form">
-      <input type="text" placeholder="your name" />
-      <input type="email" placeholder="email address" />
-      <select>
+    <form class="form" action="https://formspree.io/f/xzdanoyj" method="POST">
+      <input type="text" name="name" placeholder="your name" required />
+      <input type="email" name="email" placeholder="email address" required />
+      <select name="subject">
         <option value="" disabled selected>i'm reaching out about...</option>
         <option>recruiter mentoring</option>
         <option>hiring / executive search</option>
         <option>something else</option>
       </select>
-      <textarea placeholder="tell me more..."></textarea>
-      <button class="form-submit">send message →</button>
-    </div>
+      <textarea name="message" placeholder="tell me more..."></textarea>
+      <button type="submit" class="form-submit">send message →</button>
+    </form>
   </div>
 
   <!-- FOOTER -->
