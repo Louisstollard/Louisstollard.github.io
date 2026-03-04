@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src/ — Louis Stollard-Taylor · Technical Recruiter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=GeistMono:wght@300;400;500;600&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #0f0f17;
+      --bg3: #13131e;
+      --surface: #16161f;
+      --surface2: #1c1c28;
+      --border: #1f1f2e;
+      --border2: #2a2a3d;
+      --text: #e2e2f0;
+      --text-muted: #6b6b8a;
+      --text-dim: #3d3d58;
+      --accent: #7c5cfc;
+      --accent2: #a78bfa;
+      --accent-glow: rgba(124, 92, 252, 0.15);
+      --green: #00d084;
+      --green-dim: rgba(0, 208, 132, 0.12);
+      --mono: 'GeistMono', 'Courier New', monospace;
+      --sans: 'Geist', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: var(--accent); color: white; }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 90;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-logo span { color: var(--accent2); }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.15s;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 8rem 1.5rem 4rem;
+      max-width: 680px;
+      margin: 0 auto;
+      animation: fadeIn 0.5s ease both;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid rgba(0, 208, 132, 0.2);
+      padding: 0.3rem 0.75rem;
+      margin-bottom: 2rem;
+      letter-spacing: 0.06em;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .hero h1 {
+      font-family: var(--sans);
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 500;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 .dim { color: var(--text-muted); font-weight: 300; }
+    .hero h1 .hl { color: var(--accent2); }
+
+    .hero-sub {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 52ch;
+      line-height: 1.75;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      padding: 0.55rem 1.1rem;
+      text-decoration: none;
+      transition: all 0.15s;
+      border: 1px solid var(--border2);
+      color: var(--text-muted);
+      background: var(--surface);
+    }
+
+    .btn:hover {
+      border-color: var(--accent);
+      color: var(--accent2);
+      background: var(--accent-glow);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #6b4de0;
+      border-color: #6b4de0;
+      color: white;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      max-width: 680px;
+      margin: 0 auto;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── SECTION ── */
+    .section {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-of-type { border-bottom: none; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .section-title {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── ABOUT ── */
+    .about-text {
+      font-size: 0.93rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .about-text:last-of-type { margin-bottom: 0; }
+
+    .about-text a {
+      color: var(--accent2);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(167, 139, 250, 0.3);
+      transition: border-color 0.15s;
+    }
+    .about-text a:hover { border-color: var(--accent2); }
+
+    /* ── STATS ── */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    .stat {
+      background: var(--surface);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .stat-value {
+      font-family: var(--mono);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--accent2);
+      letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── TAGS ── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      padding: 0.25rem 0.65rem;
+      letter-spacing: 0.04em;
+      transition: all 0.15s;
+      background: var(--surface);
+    }
+
+    .tag:hover { color: var(--accent2); border-color: var(--border2); }
+
+    /* ── TWO-PILLAR CARDS ── */
+    .pillar-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .pillar-card {
+      background: var(--surface);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+
+    .pillar-card:hover { background: var(--surface2); }
+
+    .pillar-card-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .pillar-card h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+    }
+
+    .pillar-card p {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    .pillar-card-arrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-top: auto;
+      padding-top: 1rem;
+      transition: color 0.15s;
+    }
+
+    .pillar-card:hover .pillar-card-arrow { color: var(--accent2); }
+
+    /* ── OFFERINGS LIST ── */
+    .offering-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .offering-item {
+      background: var(--surface);
+      padding: 1.5rem 1.75rem;
+      display: grid;
+      grid-template-columns: 2rem 1fr;
+      gap: 1rem;
+      transition: background 0.15s;
+    }
+
+    .offering-item:hover { background: var(--surface2); }
+
+    .offering-num {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      padding-top: 0.2rem;
+    }
+
+    .offering-item h3 {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    .offering-item p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* ── SPECIALISM LIST ── */
+    .specialism-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .specialism-item {
+      background: var(--surface);
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+
+    .specialism-item:hover {
+      background: var(--surface2);
+      color: var(--text);
+    }
+
+    .specialism-item::before {
+      content: '→';
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
+
+    /* ── CONTACT GRID ── */
+    .contact-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .contact-row {
+      background: var(--surface);
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+
+    .contact-row:hover { background: var(--surface2); }
+
+    .contact-key {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      width: 80px;
+      flex-shrink: 0;
+    }
+
+    .contact-val {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      transition: color 0.15s;
+    }
+
+    .contact-row:hover .contact-val { color: var(--accent2); }
+
+    /* ── FORM ── */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    .form input,
+    .form textarea,
+    .form select {
+      background: var(--surface);
+      border: none;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      padding: 1rem 1.25rem;
+      outline: none;
+      width: 100%;
+      resize: none;
+      transition: background 0.15s;
+      appearance: none;
+    }
+
+    .form input:focus,
+    .form textarea:focus,
+    .form select:focus {
+      background: var(--surface2);
+    }
+
+    .form input::placeholder,
+    .form textarea::placeholder { color: var(--text-dim); }
+
+    .form select { color: var(--text-muted); cursor: pointer; }
+    .form select option { background: var(--bg3); }
+    .form textarea { min-height: 110px; }
+
+    .form-submit {
+      background: var(--accent);
+      color: white;
+      border: none;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.9rem 1.5rem;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .form-submit:hover { background: #6b4de0; }
+
+    /* ── CASE STUDIES ── */
+    .case-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .case-card {
+      background: var(--surface);
+      padding: 1.75rem;
+      transition: background 0.2s;
+    }
+
+    .case-card:hover { background: var(--surface2); }
+
+    .case-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.75rem;
+    }
+
+    .case-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.07em;
+      color: var(--accent2);
+      border: 1px solid rgba(167, 139, 250, 0.2);
+      background: rgba(124, 92, 252, 0.08);
+      padding: 0.2rem 0.6rem;
+    }
+
+    .case-outcome {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.06em;
+      color: var(--green);
+      background: var(--green-dim);
+      border: 1px solid rgba(0, 208, 132, 0.15);
+      padding: 0.2rem 0.6rem;
+      margin-left: auto;
+    }
+
+    .case-card h3 {
+      font-size: 0.93rem;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .case-stats {
+      display: flex;
+      gap: 0;
+      margin-top: 1.25rem;
+      border: 1px solid var(--border);
+      background: var(--border);
+    }
+
+    .case-stat {
+      flex: 1;
+      background: var(--bg);
+      padding: 0.85rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .case-stat-val {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent2);
+      letter-spacing: -0.02em;
+    }
+
+    .case-stat-label {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── PLAYBOOK ── */
+    .playbook-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .playbook-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+    }
+
+    .playbook-badge {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--accent2);
+      background: rgba(124, 92, 252, 0.1);
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 1.75rem;
+    }
+
+    .playbook-inner {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 0;
+    }
+
+    .playbook-left {
+      padding: 2rem 1.75rem;
+      border-right: 1px solid var(--border);
+    }
+
+    .playbook-includes {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .playbook-include {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.6rem;
+      line-height: 1.5;
+    }
+
+    .pi-arrow { color: var(--accent); flex-shrink: 0; }
+
+    .playbook-right {
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .playbook-price-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .playbook-price-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .playbook-price {
+      font-family: var(--mono);
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: var(--accent2);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .playbook-price-note {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      text-decoration: line-through;
+    }
+
+    .notify-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .notify-input {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      padding: 0.75rem 1rem;
+      outline: none;
+      width: 100%;
+      transition: border-color 0.15s;
+    }
+
+    .notify-input:focus { border-color: var(--accent); }
+    .notify-input::placeholder { color: var(--text-dim); }
+
+    .notify-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s;
+    }
+
+    .notify-btn:hover { background: #6b4de0; }
+
+    @media (max-width: 640px) {
+      .playbook-inner { grid-template-columns: 1fr; }
+      .playbook-left { border-right: none; border-bottom: 1px solid var(--border); }
+      .case-outcome { margin-left: 0; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-left {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.25rem;
+    }
+
+    .footer-links a {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: var(--text-muted); }
+
+    /* ── GLOW ORBS ── */
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: 0.06;
+      z-index: 0;
+    }
+
+    .glow-orb-1 {
+      width: 500px; height: 500px;
+      background: var(--accent);
+      top: -150px; left: -150px;
+    }
+
+    .glow-orb-2 {
+      width: 400px; height: 400px;
+      background: #00d0ff;
+      bottom: 10%; right: -100px;
+    }
+
+    /* ── TERMINAL BLOCK ── */
+    .terminal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .terminal .prompt { color: var(--text-dim); }
+    .terminal .cmd { color: var(--accent2); }
+    .terminal .output { color: var(--green); }
+    .terminal .comment { color: var(--text-dim); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .reveal.animate-ready {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    .reveal.visible { opacity: 1 !important; transform: none !important; }
+
+    /* ── CURSOR GLOW ── */
+    .cursor-glow {
+      position: fixed;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(124, 92, 252, 0.06) 0%, transparent 70%);
+      transform: translate(-50%, -50%);
+      transition: left 0.1s ease, top 0.1s ease;
+      z-index: 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .pillar-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      nav { padding: 0.9rem 1rem; }
+      .nav-links { gap: 1rem; }
+      footer { flex-direction: column; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-orb glow-orb-1"></div>
+  <div class="glow-orb glow-orb-2"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">src<span>/</span></a>
+      <ul class="nav-links">
+        <li><a href="#about">about</a></li>
+        <li><a href="#mentoring">mentoring</a></li>
+        <li><a href="#hiring">hiring</a></li>
+        <li><a href="#playbook">playbook</a></li>
+        <li><a href="#case-studies">case studies</a></li>
+        <li><a href="#contact">contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">AVAILABLE FOR NEW CLIENTS & MENTEES</div>
+
+    <h1>
+      Louis Stollard-Taylor<br>
+      <span class="dim">/ Technical Recruiter</span>
+    </h1>
+
+    <p class="hero-sub">
+      I place exceptional engineers, product leaders, and executives at Blockchain, Crypto, and Web3 companies — and I mentor the next generation of technical recruiters on how to do the same.
+    </p>
+
+    <div class="hero-links">
+      <a href="#mentoring" class="btn btn-primary">mentoring →</a>
+      <a href="#hiring" class="btn">hire with me</a>
+      <a href="https://cal.com/louis-stollard-taylor-qo0ilj" target="_blank" class="btn">book a call</a>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section reveal" id="about">
+    <div class="section-header">
+      <span class="section-title">about</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="terminal">
+      <div><span class="prompt">$ </span><span class="cmd">whoami</span></div>
+      <div class="output">louis-stollard-taylor</div>
+      <div style="margin-top:0.5rem"><span class="prompt">$ </span><span class="cmd">cat profile.txt</span></div>
+      <div class="comment"># Technical Recruiter @ Hirechain</div>
+      <div class="comment"># Specialisation: Blockchain · Crypto · Web3</div>
+      <div class="comment"># Location: Remote-first</div>
+      <div class="comment"># Status: taking on clients + mentees</div>
+    </div>
+
+    <p class="about-text">
+      I'm a technical recruiter at <a href="https://hirechain.io" target="_blank">Hirechain</a>, specialising exclusively in Blockchain, Crypto and Web3. I work in this space because it's where my expertise and passion genuinely lie — not just where the market happens to be hot.
+    </p>
+    <p class="about-text">
+      Over my career I've placed Software Engineers through to Staff Engineers, Heads and VPs of Engineering, CTOs, Product Managers, and General Counsels — working primarily with early-stage tech and Web3 startups that need to move fast and hire right.
+    </p>
+
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-value">$1M+</span>
+        <span class="stat-label">billed in placements</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">Web3</span>
+        <span class="stat-label">exclusive focus</span>
+      </div>
+      <div class="stat">
+        <span class="stat-value">IC → CTO</span>
+        <span class="stat-label">full seniority range</span>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- WHAT I DO -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-title">what i do</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="pillar-grid">
+      <a href="#mentoring" class="pillar-card">
+        <span class="pillar-card-label">01 / mentoring</span>
+        <h3>Teaching recruiters how to build a top-billing desk.</h3>
+        <p>Frameworks, sourcing systems, and the mindset it takes to make it in technical recruiting — especially in Web3.</p>
+        <span class="pillar-card-arrow">→ learn more</span>
+      </a>
+      <a href="#hiring" class="pillar-card">
+        <span class="pillar-card-label">02 / hiring</span>
+        <h3>Placing the engineers and leaders Web3 companies need.</h3>
+        <p>From first hires to executive search — I find the people who actually move the needle in crypto.</p>
+        <span class="pillar-card-arrow">→ learn more</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- MENTORING -->
+  <div class="section reveal" id="mentoring">
+    <div class="section-header">
+      <span class="section-title">mentoring</span>
+      <div class="section-line"></div>
+    </div>
+
+    <p class="about-text" style="margin-bottom: 1.75rem;">
+      Technical recruiting is a craft. I'll teach you the exact processes, tools, and client strategies I've used to build a successful desk in one of the most competitive sectors in tech. No fluff — just what actually works.
+    </p>
+
+    <div class="offering-list">
+      <div class="offering-item">
+        <span class="offering-num">01</span>
+        <div>
+          <h3>Breaking into Technical Recruiting</h3>
+          <p>New to the industry or pivoting from another field? I'll help you understand the market, build your personal brand, and land your first clients — without spending years figuring it out alone.</p>
+        </div>
+      </div>
+      <div class="offering-item">
+        <span class="offering-num">02</span>
+        <div>
+          <h3>Web3 & Crypto Specialism</h3>
+          <p>The Web3 talent market plays by different rules. I'll show you how to navigate it — from understanding the tech stack to sourcing candidates who are genuinely active in the ecosystem.</p>
+        </div>
+      </div>
+      <div class="offering-item">
+        <span class="offering-num">03</span>
+        <div>
+          <h3>Billing Your First $100K</h3>
+          <p>Practical coaching on BD, candidate management, fee negotiation, and pipeline building. Focused on getting you to consistent billings, fast.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem;">
+      <a href="https://cal.com/louis-stollard-taylor-qo0ilj" target="_blank" class="btn btn-primary">book a discovery call →</a>
+    </div>
+  </div>
+
+  <!-- HIRING -->
+  <div class="section reveal" id="hiring">
+    <div class="section-header">
+      <span class="section-title">hiring / clients</span>
+      <div class="section-line"></div>
+    </div>
+
+    <p class="about-text" style="margin-bottom: 1.75rem;">
+      I work with early-stage startups and scaling Web3 companies to place exceptional talent across the full org — from your first engineers to your executive team.
+    </p>
+
+    <div class="specialism-list">
+      <div class="specialism-item">Software Engineers (IC → Staff Engineer)</div>
+      <div class="specialism-item">Engineering Leadership — Head of / VP / CTO</div>
+      <div class="specialism-item">Product Managers & Product Leaders</div>
+      <div class="specialism-item">Blockchain & Protocol Specialists</div>
+      <div class="specialism-item">General Counsel & Legal</div>
+      <div class="specialism-item">DeFi · NFT · Layer 1 & Layer 2</div>
+    </div>
+
+    <a href="#contact" class="btn">start a search →</a>
+  </div>
+
+  <!-- PLAYBOOK -->
+  <div class="section reveal" id="playbook">
+    <div class="section-header">
+      <span class="section-title">the web3 recruiter playbook</span>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="playbook-card">
+      <div class="playbook-badge">COMING SOON</div>
+      <div class="playbook-inner">
+        <div class="playbook-left">
+          <h2 style="font-family: var(--sans); font-size: 1.4rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.3; color: var(--text);">The Web3 Recruiter<br>Playbook</h2>
+          <p class="about-text" style="margin-top: 1rem;">Everything I know about building a successful technical recruiting desk in Web3 — condensed into a practical, no-fluff guide.</p>
+          <p class="about-text">From sourcing candidates in on-chain communities and winning your first client, to structuring fees and closing offers in a volatile market. The resource I wish I had when I started.</p>
+          <div class="playbook-includes">
+            <div class="playbook-include"><span class="pi-arrow">→</span> Sourcing frameworks for Web3 talent</div>
+            <div class="playbook-include"><span class="pi-arrow">→</span> How to approach and win your first client</div>
+            <div class="playbook-include"><span class="pi-arrow">→</span> Fee structures and offer negotiation</div>
+            <div class="playbook-include"><span class="pi-arrow">→</span> Building a pipeline that compounds</div>
+            <div class="playbook-include"><span class="pi-arrow">→</span> The Web3 tech stack — explained for recruiters</div>
+            <div class="playbook-include"><span class="pi-arrow">→</span> Billing your first $100K roadmap</div>
+          </div>
+        </div>
+        <div class="playbook-right">
+          <div class="playbook-price-block">
+            <div class="playbook-price-label">early access price</div>
+            <div class="playbook-price">£39</div>
+            <div class="playbook-price-note">Full price £65 on launch</div>
+          </div>
+          <div class="notify-form">
+            <p style="font-family: var(--mono); font-size: 0.68rem; color: var(--text-dim); margin-bottom: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;">Notify me on launch</p>
+            <input type="email" placeholder="your email address" class="notify-input" />
+            <button class="notify-btn">notify me →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE STUDIES -->
+  <div class="section reveal" id="case-studies">
+    <div class="section-header">
+      <span class="section-title">case studies</span>
+      <div class="section-line"></div>
+    </div>
+
+    <p class="about-text" style="margin-bottom: 1.75rem;">
+      A selection of searches I've run — anonymised where required. Real roles, real timelines, real outcomes.
+    </p>
+
+    <div class="case-list">
+
+      <div class="case-card">
+        <div class="case-meta">
+          <span class="case-tag">DeFi Protocol</span>
+          <span class="case-tag">Executive Search</span>
+          <span class="case-outcome">✓ Placed in 18 days</span>
+        </div>
+        <h3>VP of Engineering — Series A DeFi Protocol</h3>
+        <p class="about-text" style="margin-top:0.5rem;">A fast-scaling DeFi protocol had been searching for a VP of Engineering for three months without success. Their previous agency had sent generic candidates with no on-chain experience. I re-scoped the brief, identified that their real problem was retention risk not seniority, and sourced a shortlist of four candidates within a week — all with active DeFi backgrounds. The role was filled in 18 days from first conversation.</p>
+        <div class="case-stats">
+          <div class="case-stat"><span class="case-stat-val">18</span><span class="case-stat-label">days to offer</span></div>
+          <div class="case-stat"><span class="case-stat-val">4</span><span class="case-stat-label">shortlisted</span></div>
+          <div class="case-stat"><span class="case-stat-val">3mo</span><span class="case-stat-label">prior search</span></div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-meta">
+          <span class="case-tag">Layer 2</span>
+          <span class="case-tag">Engineering</span>
+          <span class="case-outcome">✓ 3 hires in 6 weeks</span>
+        </div>
+        <h3>Senior Engineers × 3 — Layer 2 Infrastructure Team</h3>
+        <p class="about-text" style="margin-top:0.5rem;">An early-stage Layer 2 team needed to double their engineering headcount before a major network upgrade. Budget was tight and the roles required deep EVM and Rust experience — a rare combination. Through targeted sourcing in protocol-level communities and contributor networks, I delivered three hires across six weeks, all within budget and all still with the company 18 months later.</p>
+        <div class="case-stats">
+          <div class="case-stat"><span class="case-stat-val">3</span><span class="case-stat-label">engineers placed</span></div>
+          <div class="case-stat"><span class="case-stat-val">6wk</span><span class="case-stat-label">timeline</span></div>
+          <div class="case-stat"><span class="case-stat-val">100%</span><span class="case-stat-label">18mo retention</span></div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-meta">
+          <span class="case-tag">Web3 Startup</span>
+          <span class="case-tag">Legal</span>
+          <span class="case-outcome">✓ Placed in 24 days</span>
+        </div>
+        <h3>General Counsel — Web3 Consumer App</h3>
+        <p class="about-text" style="margin-top:0.5rem;">A consumer-facing Web3 startup needed a General Counsel ahead of a token launch with a hard deadline. The candidate needed both crypto-native regulatory knowledge and startup experience — a highly specific profile. I mapped the market, made direct approaches, and closed the right candidate in 24 days, two weeks before the launch window.</p>
+        <div class="case-stats">
+          <div class="case-stat"><span class="case-stat-val">24</span><span class="case-stat-label">days to offer</span></div>
+          <div class="case-stat"><span class="case-stat-val">2wk</span><span class="case-stat-label">ahead of deadline</span></div>
+          <div class="case-stat"><span class="case-stat-val">GC</span><span class="case-stat-label">crypto-native legal</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="about-text" style="margin-top: 1.75rem; font-size: 0.78rem; color: var(--text-dim);">
+      All case studies are anonymised. References available on request. <a href="https://www.linkedin.com/in/louisstollard/details/recommendations?profileUrn=urn%3Ali%3Afsd_profile%3AACoAADOA9VgBI7LAYJ2N4RAp7psjSKWxXHtF_8k&tabIndex=0&detailScreenTabIndex=0&lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3Brq7VXRV7SWWRnug9M1fxwg%3D%3D" target="_blank" style="color: var(--accent2); border-bottom: 1px solid rgba(167,139,250,0.3); text-decoration: none; transition: border-color 0.15s;">View my LinkedIn recommendations →</a>
+    </p>
+  </div>
+
+  <!-- CONTACT -->
+  <div class="section reveal" id="contact">
+    <div class="section-header">
+      <span class="section-title">contact</span>
+      <div class="section-line"></div>
+    </div>
+
+    <p class="about-text" style="margin-bottom: 1.75rem;">
+      Whether you're a recruiter looking to level up, a company looking to hire, or just want to connect — reach out via any of the below.
+    </p>
+
+    <div class="contact-grid">
+      <a href="/cdn-cgi/l/email-protection#e6aa89938f95a68e8f9483858e878f88c88f89" class="contact-row">
+        <span class="contact-key">email</span>
+        <span class="contact-val"><span class="__cf_email__" data-cfemail="4c002339253f0c24253e292f242d2522622523">[email&#160;protected]</span></span>
+      </a>
+      <a href="https://t.me/Louisstollard" target="_blank" class="contact-row">
+        <span class="contact-key">telegram</span>
+        <span class="contact-val">@Louisstollard</span>
+      </a>
+      <a href="https://cal.com/louis-stollard-taylor-qo0ilj" target="_blank" class="contact-row">
+        <span class="contact-key">book a call</span>
+        <span class="contact-val">cal.com/louis-stollard-taylor</span>
+      </a>
+      <a href="https://www.linkedin.com/in/louisstollard/" target="_blank" class="contact-row">
+        <span class="contact-key">linkedin</span>
+        <span class="contact-val">/in/louisstollard</span>
+      </a>
+    </div>
+
+    <div class="form">
+      <input type="text" placeholder="your name" />
+      <input type="email" placeholder="email address" />
+      <select>
+        <option value="" disabled selected>i'm reaching out about...</option>
+        <option>recruiter mentoring</option>
+        <option>hiring / executive search</option>
+        <option>something else</option>
+      </select>
+      <textarea placeholder="tell me more..."></textarea>
+      <button class="form-submit">send message →</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-left">© 2026 Louis Stollard-Taylor</span>
+    <div class="footer-links">
+      <a href="https://www.linkedin.com/in/louisstollard/" target="_blank">linkedin</a>
+      <a href="https://t.me/Louisstollard" target="_blank">telegram</a>
+      <a href="https://cal.com/louis-stollard-taylor-qo0ilj" target="_blank">cal.com</a>
+    </div>
+  </footer>
+
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Scroll reveal — add animate-ready only after page load so content is visible by default
+    window.addEventListener('load', () => {
+      const reveals = document.querySelectorAll('.reveal');
+      reveals.forEach(el => el.classList.add('animate-ready'));
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visible'), i * 60);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      reveals.forEach(el => observer.observe(el));
+    });
+
+    // Cursor glow
+    const glow = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', e => {
+      glow.style.left = e.clientX + 'px';
+      glow.style.top = e.clientY + 'px';
+    });
+
+    // Active nav
+    const sections = document.querySelectorAll('.section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.
