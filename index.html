@@ -75,7 +75,9 @@
       background: rgba(10, 10, 15, 0.85);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
+      transition: transform 0.3s ease;
     }
+    nav.nav-hidden { transform: translateY(-100%); }
 
     .nav-inner {
       max-width: 1200px;
@@ -855,10 +857,7 @@
       .section { padding: 2.5rem 1.5rem; }
 
       /* Stats — stack to 2 col then fix IC->CTO overflow */
-      .stats { grid-template-columns: 1fr 1fr; }
-      .stats .stat:last-child {
-        grid-column: 1 / -1;
-      }
+      .stats { grid-template-columns: 1fr; }
 
       /* Case stats — stack vertically */
       .case-stats { flex-direction: column; }
@@ -995,7 +994,7 @@
     <a href="#about" onclick="closeMobileMenu()">about</a>
     <a href="#mentoring" onclick="closeMobileMenu()">mentoring</a>
     <a href="#hiring" onclick="closeMobileMenu()">hiring</a>
-    <a href="#playbook" onclick="closeMobileMenu()">playbook</a>
+    <a href="playbook.html" onclick="closeMobileMenu()">playbook</a>
     <a href="case-studies.html" onclick="closeMobileMenu()">case studies</a>
     <a href="#contact" onclick="closeMobileMenu()">contact</a>
   </div>
@@ -1238,6 +1237,19 @@
   </footer>
 
   <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    // Hide nav on scroll down, show on scroll up
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const current = window.scrollY;
+      const nav = document.querySelector('nav');
+      if (current > lastScroll && current > 80) {
+        nav.classList.add('nav-hidden');
+      } else {
+        nav.classList.remove('nav-hidden');
+      }
+      lastScroll = current;
+    });
+
     function openMobileMenu() {
       document.getElementById('mobileMenu').classList.add('open');
       document.body.style.overflow = 'hidden';
